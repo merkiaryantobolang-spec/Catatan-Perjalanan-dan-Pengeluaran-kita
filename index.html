@@ -49,6 +49,85 @@ margin-bottom:15px;
 color:#ff7b54;
 }
 
+/* --- CSS CHECKLIST DINAMIS --- */
+.checklist-container {
+max-height: 220px; 
+overflow-y: auto;  
+padding-right: 10px;
+margin-bottom: 15px;
+}
+
+.checklist-container::-webkit-scrollbar,
+.scrollable-summary::-webkit-scrollbar {
+width: 6px;
+}
+.checklist-container::-webkit-scrollbar-track,
+.scrollable-summary::-webkit-scrollbar-track {
+background: #f1f1f1; 
+border-radius: 10px;
+}
+.checklist-container::-webkit-scrollbar-thumb {
+background: #2a9d8f; 
+border-radius: 10px;
+}
+.scrollable-summary::-webkit-scrollbar-thumb {
+background: #ff7b54; 
+border-radius: 10px;
+}
+
+.check-item {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 10px;
+background: #f8f9fa;
+padding: 10px;
+border-radius: 10px;
+border: 1px solid #eee;
+}
+
+.check-item input[type="checkbox"] {
+width: 20px;
+height: 20px;
+margin: 0;
+cursor: pointer;
+}
+
+.check-item label {
+flex: 1;
+cursor: pointer;
+font-size: 15px;
+}
+
+.btn-delete-task {
+background: #ffe3e3;
+color: #e63946;
+border: none;
+width: 30px;
+height: 30px;
+border-radius: 8px;
+cursor: pointer;
+font-weight: bold;
+padding: 0;
+}
+.btn-delete-task:hover {
+background: #ffcdd2;
+}
+
+.input-task-group {
+display: flex;
+gap: 10px;
+margin-bottom: 15px;
+}
+.input-task-group input {
+margin-bottom: 0; 
+}
+.input-task-group button {
+width: auto;
+padding: 10px 20px;
+background: #0077b6;
+}
+
 .item{
 background:#f8f9fa;
 padding:15px;
@@ -71,13 +150,6 @@ margin-top:15px;
 
 .expense-content.active{
 display:block;
-}
-
-.check-item{
-display:flex;
-align-items:center;
-gap:10px;
-margin-bottom:10px;
 }
 
 input,select{
@@ -129,11 +201,16 @@ border-radius:15px;
 font-weight:bold;
 }
 
-.footer{
-text-align:center;
-margin-top:20px;
-color:white;
-font-weight:bold;
+/* CSS KHUSUS RINGKASAN AGAR BISA SCROLL */
+.scrollable-summary {
+max-height: 350px; 
+overflow-y: auto;
+padding: 15px;
+padding-right: 10px;
+background: linear-gradient(to right, #fff8e1, #ffffff);
+border-radius: 15px;
+font-size: 13px;
+line-height: 1.6;
 }
 
 .footer{
@@ -153,7 +230,7 @@ font-size:18px;
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="mainContainer">
 <h1 class="title">🌴 Jalan Jalan Bersama Pacarku 🌊</h1>
 
 <div class="grid">
@@ -161,39 +238,32 @@ font-size:18px;
 <div class="card">
 <h2>✅ Checklist Trip</h2>
 
-<div class="check-item"><input type="checkbox" class="task"> Berangkat dari Solo</div>
-<div class="check-item"><input type="checkbox" class="task"> Sampai Pantai</div>
-<div class="check-item"><input type="checkbox" class="task"> Makan Malam</div>
-<div class="check-item"><input type="checkbox" class="task"> Check In Penginapan</div>
-<div class="check-item"><input type="checkbox" class="task"> Istirahat</div>
-<div class="check-item"><input type="checkbox" class="task"> Jalan Pagi</div>
-<div class="check-item"><input type="checkbox" class="task"> Belanja Untuk Masak</div>
-<div class="check-item"><input type="checkbox" class="task"> Istirahat</div>
-<div class="check-item"><input type="checkbox" class="task"> Makan siang Masak</div>
-<div class="check-item"><input type="checkbox" class="task"> Jalan Jalan Sore ke Coffe</div>
-<div class="check-item"><input type="checkbox" class="task"> Makan Malam</div>
-<div class="check-item"><input type="checkbox" class="task"> Istirahat</div>
-<div class="check-item"><input type="checkbox" class="task"> Masak Untuk Sarapan</div>
-<div class="check-item"><input type="checkbox" class="task"> Prepare Pulang ke Solo</div>
+<div class="input-task-group">
+<input type="text" id="newTaskInput" placeholder="Ketik kegiatan baru...">
+<button onclick="addTask()">➕</button>
+</div>
+
+<div class="checklist-container" id="checklistContainer">
+</div>
 
 <div class="progress-bar">
 <div class="progress" id="progress"></div>
 </div>
-<p id="progressText">0% selesai</p>
+<p id="progressText" style="margin-top: 10px; text-align: center; font-weight: bold; color: #555;">0% selesai</p>
 </div>
 
 <div class="card">
-<h2>🏖️ Pantai Tujuan</h2>
+<h2>🗺️ Destinasi Tujuan</h2>
 
-<label><b>Pilih Pantai Tujuan</b></label>
-<select id="pantaiSelect" onchange="showPantai()">
-<option value="">-- Pilih Pantai --</option>
-<option value="midodaren">Pantai Midodaren</option>
-<option value="ngluwen">Pantai Ngluwen</option>
-<option value="wediombo">Pantai Wediombo</option>
-</select>
+<div id="destinasiContainer"></div>
 
-<div id="pantaiDetail"></div>
+<button onclick="addDestinasi()" style="background:#0077b6;">
+➕ Tambah Destinasi
+</button>
+
+<div class="total-box" style="background:#e3f2fd;">
+🗺️ Isi destinasi perjalanan kalian (Pantai, Gunung, Museum, dll).
+</div>
 </div>
 
 <div class="card">
@@ -207,7 +277,7 @@ font-size:18px;
 </div>
 
 <div class="card">
-<h2>💰 Budget penginapan dan Transportasi</h2>
+<h2>💰 Budget Penginapan & Transport</h2>
 
 <div class="item">
 <div class="expense-header" onclick="toggleExpense('budgetPenginapan')">
@@ -229,7 +299,7 @@ font-size:18px;
 
 <div class="item">
 <div class="expense-header" onclick="toggleExpense('budgetBensin')">
-<span>⛽ Bensin</span>
+<span>⛽ Bensin & Transportasi</span>
 <span>▼</span>
 </div>
 
@@ -245,10 +315,8 @@ font-size:18px;
 </div>
 </div>
 
-
-
 <div class="total-box">
-🌟 ini juga memiliki kemungkinan lebih lemat atau over Budget.
+🌟 Ini juga memiliki kemungkinan lebih hemat atau over budget.
 </div>
 </div>
 
@@ -262,18 +330,20 @@ font-size:18px;
 </button>
 
 <div class="total-box">
-🧃 Tambahkan snack, BBQ, minuman, kebutuhan masak, atau jajanan trip lainnya di sini.
+🧃 Tambahkan snack, BBQ, minuman, kebutuhan masak, dll di sini.
 </div>
 </div>
 
-<div class="card">
+<div class="card" id="summaryCard">
 <h2>📋 Ringkasan Perjalanan dan Budget</h2>
 
-<div class="total-box" id="summaryBox" style="line-height:1.9;background:linear-gradient(to right,#fff8e1,#ffffff);font-size:15px;">
+<div class="scrollable-summary" id="summaryBox">
+<div style="text-align:center; font-weight:bold; font-size:15px; color:#555; padding: 20px 0;">
 ✨ Ringkasan trip akan muncul di sini setelah tombol ditekan.
 </div>
+</div>
 
-<button onclick="generateSummary()" style="margin-top:15px;background:#ff7b54;">
+<button id="btnSummary" onclick="generateSummary()" style="margin-top:15px;background:#ff7b54;">
 Buat Ringkasan Trip
 </button>
 </div>
@@ -297,7 +367,7 @@ background:#6a4c93;
 margin-top:10px;
 background:#ff9800;
 ">
-🖼️ Simpan ke Galeri
+🖼️ Simpan ke Galeri (HD)
 </button>
 
 <div class="footer">
@@ -307,188 +377,123 @@ background:#ff9800;
 </div>
 
 <script>
-const tasks = document.querySelectorAll('.task');
-const progress = document.getElementById('progress');
-const progressText = document.getElementById('progressText');
-
-tasks.forEach(task=>{
-task.addEventListener('change',updateProgress);
-});
-
-function updateProgress(){
-const checked=document.querySelectorAll('.task:checked').length;
-const total=tasks.length;
-const percent=Math.round((checked/total)*100);
-
-progress.style.width=percent+'%';
-progressText.innerText=percent+'% selesai';
-}
-
-function generateSummary(){
-const penginapan=document.getElementById('penginapanActual').value || 0;
-const bensin=document.getElementById('bensinActual').value || 0;
-let shoppingTotal = 0;
-
-const shoppingActuals = document.querySelectorAll('.shopping-actual');
-shoppingActuals.forEach(item=>{
-shoppingTotal += parseInt(item.value) || 0;
-});
-
-const pantaiInput = document.getElementById('pantaiActual');
-const pantaiBudget = pantaiInput ? pantaiInput.value : 0;
-const selectedPantai=document.getElementById('pantaiSelect').options[document.getElementById('pantaiSelect').selectedIndex].text;
-
-let dynamicTotal = 0;
-
-const dynamicActuals = document.querySelectorAll('.dynamic-actual');
-dynamicActuals.forEach(item=>{
-dynamicTotal += parseInt(item.value) || 0;
-});
-
-const total =
-parseInt(penginapan)+
-parseInt(bensin)+
-parseInt(shoppingTotal)+
-parseInt(pantaiBudget)+
-parseInt(dynamicTotal);
-
-const summary=document.getElementById('summaryBox');
-
-const checked=document.querySelectorAll('.task:checked').length;
-const totalTask=document.querySelectorAll('.task').length;
-const progressPercent=Math.round((checked/totalTask)*100);
-
-const durasiInput = document.querySelector('#pantaiDetail input[type="number"]');
-const selectedPantaiDurasi = durasiInput ? durasiInput.value : '-';
-
-const makanItems=[...document.querySelectorAll('#dynamicExpense .expense-header span:first-child')]
-.map(item=>item.innerText)
-.filter(item=>!item.includes('Tempat Baru'));
-
-const belanjaItems=[...document.querySelectorAll('#shoppingContainer .expense-header span:first-child')]
-.map(item=>item.innerText)
-.filter(item=>!item.includes('Belanja Baru'));
-
-summary.innerHTML=`
-<div style="font-size:22px;margin-bottom:15px;color:#ff7b54;">
-🌴 RINGKASAN TRIP 3D2N 🌊
-</div>
-
-<div style="padding:15px;background:white;border-radius:15px;margin-bottom:15px;">
-<b>📌 Progress Trip</b><br>
-${progressPercent}% checklist selesai
-</div>
-
-<div style="padding:15px;background:white;border-radius:15px;margin-bottom:15px;">
-<b>🏖️ Pantai Tujuan</b><br>
-${selectedPantai}<br>
-⏳ Durasi Main : ${selectedPantaiDurasi} jam
-</div>
-
-<div style="padding:15px;background:white;border-radius:15px;margin-bottom:15px;">
-<b>☕ Tempat Ngopi & Makan</b><br>
-${makanItems.length>0 ? makanItems.join('<br>') : 'Belum ada tempat dipilih'}
-</div>
-
-<div style="padding:15px;background:white;border-radius:15px;margin-bottom:15px;">
-<b>🛒 Belanja & Jajanan</b><br>
-${belanjaItems.length>0 ? belanjaItems.join('<br>') : 'Belum ada belanja ditambahkan'}
-</div>
-
-<div style="padding:15px;background:white;border-radius:15px;margin-bottom:15px;">
-<b>💰 Rincian Budget</b><br>
-🏠 Penginapan : Rp ${parseInt(penginapan).toLocaleString('id-ID')}<br>
-⛽ Bensin : Rp ${parseInt(bensin).toLocaleString('id-ID')}<br>
-☕🍜 Ngopi & Makan : Rp ${parseInt(dynamicTotal).toLocaleString('id-ID')}<br>
-🛒 Belanja : Rp ${parseInt(shoppingTotal).toLocaleString('id-ID')}<br>
-🏖️ Pantai : Rp ${parseInt(pantaiBudget).toLocaleString('id-ID')}
-</div>
-
-<div style="padding:18px;background:linear-gradient(to right,#ffecd2,#fcb69f);border-radius:18px;font-size:22px;text-align:center;font-weight:bold;color:#333;">
-💸 TOTAL TRIP : Rp ${total.toLocaleString('id-ID')}
-</div>
-`;
-}
-
-function showPantai(){
-const value=document.getElementById('pantaiSelect').value;
-const detail=document.getElementById('pantaiDetail');
-
-if(value==='midodaren'){
-detail.innerHTML=`
-<div class="item">
-<b>🏖️ Pantai Midodaren</b><br>
-Waktu Tempuh : 1 jam 28 menit<br><br>
-
-<label>Durasi di Pantai (jam)</label>
-<input type="number" value="2">
-
-<label>Target Budget</label>
-<input type="number" id="pantaiTarget" value="">
-
-<label>Pengeluaran Aktual</label>
-<input type="number" id="pantaiActual" placeholder="Isi sendiri">
-
-<button onclick="calculateBudget('pantaiTarget','pantaiActual','pantaiResult')">Hitung</button>
-<p class="result" id="pantaiResult"></p>
-</div>`;
-}
-
-else if(value==='ngluwen'){
-detail.innerHTML=`
-<div class="item">
-<b>🏖️ Pantai Ngluwen</b><br>
-Waktu Tempuh : 1 jam 16 menit<br><br>
-
-<label>Durasi di Pantai (jam)</label>
-<input type="number" value="3">
-
-<label>Target Budget</label>
-<input type="number" id="pantaiTarget" value="">
-
-<label>Pengeluaran Aktual</label>
-<input type="number" id="pantaiActual" placeholder="Isi sendiri">
-
-<button onclick="calculateBudget('pantaiTarget','pantaiActual','pantaiResult')">Hitung</button>
-<p class="result" id="pantaiResult"></p>
-</div>`;
-}
-
-else if(value==='wediombo'){
-detail.innerHTML=`
-<div class="item">
-<b>🏖️ Pantai Wediombo 🌅</b><br>
-Sunset Favorite<br>
-Waktu Tempuh : 1 jam 46 menit<br><br>
-
-<label>Durasi di Pantai (jam)</label>
-<input type="number" value="4">
-
-<label>Target Budget</label>
-<input type="number" id="pantaiTarget" value="">
-
-<label>Pengeluaran Aktual</label>
-<input type="number" id="pantaiActual" placeholder="Isi sendiri">
-
-<button onclick="calculateBudget('pantaiTarget','pantaiActual','pantaiResult')">Hitung</button>
-<p class="result" id="pantaiResult"></p>
-</div>`;
-}
-
-else{
-detail.innerHTML='';
-}
-}
-
+let taskCount = 0;
+let destinasiCount = 0;
 let expenseCount = 0;
 let shoppingCount = 0;
 
-function addExpense(){
-expenseCount++;
+function addTask(text = '', isChecked = false, shouldSave = true) {
+    const inputEl = document.getElementById('newTaskInput');
+    const taskText = text || inputEl.value;
+    
+    if (taskText.trim() === '') {
+        alert('Tulis nama kegiatan dulu ya!');
+        return;
+    }
 
-const container=document.getElementById('dynamicExpense');
+    taskCount++;
+    const container = document.getElementById('checklistContainer');
 
-const html=`
+    const wrapper = document.createElement('div');
+    wrapper.className = 'check-item';
+    wrapper.id = 'taskWrapper' + taskCount;
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'task';
+    checkbox.id = 'task' + taskCount;
+    checkbox.checked = isChecked;
+    checkbox.onchange = () => {
+        updateProgress();
+        saveData();
+    };
+
+    const label = document.createElement('label');
+    label.htmlFor = 'task' + taskCount;
+    label.innerText = taskText;
+
+    const btnDelete = document.createElement('button');
+    btnDelete.className = 'btn-delete-task';
+    btnDelete.innerText = '❌';
+    btnDelete.onclick = () => {
+        wrapper.remove();
+        updateProgress();
+        saveData();
+    };
+
+    wrapper.appendChild(checkbox);
+    wrapper.appendChild(label);
+    wrapper.appendChild(btnDelete);
+
+    container.appendChild(wrapper);
+    
+    inputEl.value = '';
+
+    if(shouldSave) {
+        updateProgress();
+        saveData();
+    }
+}
+
+function updateProgress() {
+    const tasks = document.querySelectorAll('.task');
+    const checked = document.querySelectorAll('.task:checked').length;
+    const total = tasks.length;
+    const percent = total === 0 ? 0 : Math.round((checked / total) * 100);
+
+    document.getElementById('progress').style.width = percent + '%';
+    document.getElementById('progressText').innerText = percent + '% selesai (' + checked + '/' + total + ')';
+}
+
+function addDestinasi() {
+    destinasiCount++;
+    const container = document.getElementById('destinasiContainer');
+
+    const html = `
+<div class="item">
+<div class="expense-header" onclick="toggleExpense('destinasiContent${destinasiCount}')">
+<span id="destinasiTitle${destinasiCount}">🗺️ Destinasi Baru</span>
+<span>▼</span>
+</div>
+
+<div class="expense-content" id="destinasiContent${destinasiCount}">
+<label><b>Nama Destinasi</b></label>
+<input type="text" id="destinasiName${destinasiCount}" placeholder="Contoh: Pantai Wediombo / Gunung Bromo" oninput="updateDestinasiTitle(${destinasiCount}, this.value)">
+
+<label>Durasi Singgah (jam/hari)</label>
+<input type="text" id="destinasiDurasi${destinasiCount}" placeholder="Contoh: 3 Jam / 1 Hari">
+
+<label>Target Budget (Tiket, Parkir, dll)</label>
+<input type="number" id="destinasiTarget${destinasiCount}" value="">
+
+<label>Pengeluaran Aktual</label>
+<input type="number" class="destinasi-actual" id="destinasiActual${destinasiCount}" placeholder="Isi pengeluaran aktual">
+
+<button onclick="calculateBudget('destinasiTarget${destinasiCount}','destinasiActual${destinasiCount}','destinasiResult${destinasiCount}')">
+Hitung
+</button>
+
+<p class="result" id="destinasiResult${destinasiCount}"></p>
+</div>
+</div>`;
+
+    container.insertAdjacentHTML('beforeend', html);
+}
+
+function updateDestinasiTitle(id, value) {
+    const title = document.getElementById('destinasiTitle' + id);
+    if (value.trim() === '') {
+        title.innerHTML = '🗺️ Destinasi Baru';
+    } else {
+        title.innerHTML = '🗺️ ' + value;
+    }
+}
+
+function addExpense() {
+    expenseCount++;
+    const container = document.getElementById('dynamicExpense');
+
+    const html = `
 <div class="item">
 <div class="expense-header" onclick="toggleExpense('expenseContent${expenseCount}')">
 <span id="expenseTitle${expenseCount}">🍴 Tempat Baru</span>
@@ -497,10 +502,10 @@ const html=`
 
 <div class="expense-content" id="expenseContent${expenseCount}">
 <label><b>Nama Tempat</b></label>
-<input type="text" placeholder="Contoh: Kopi Senja / Seafood Pantai" oninput="updateExpenseTitle(${expenseCount}, this.value)">
+<input type="text" id="expenseName${expenseCount}" placeholder="Contoh: Kopi Senja / Seafood Pantai" oninput="updateExpenseTitle(${expenseCount}, this.value)">
 
 <label>Jenis</label>
-<select>
+<select id="expenseType${expenseCount}">
 <option>Ngopi</option>
 <option>Makan</option>
 <option>Jajanan</option>
@@ -521,15 +526,14 @@ Hitung
 </div>
 </div>`;
 
-container.innerHTML += html;
+    container.insertAdjacentHTML('beforeend', html);
 }
 
-function addShoppingItem(){
-shoppingCount++;
+function addShoppingItem() {
+    shoppingCount++;
+    const container = document.getElementById('shoppingContainer');
 
-const container=document.getElementById('shoppingContainer');
-
-const html=`
+    const html = `
 <div class="item">
 <div class="expense-header" onclick="toggleExpense('shoppingContent${shoppingCount}')">
 <span id="shoppingTitle${shoppingCount}">🛒 Belanja Baru</span>
@@ -538,10 +542,10 @@ const html=`
 
 <div class="expense-content" id="shoppingContent${shoppingCount}">
 <label><b>Nama Belanja / Jajanan</b></label>
-<input type="text" placeholder="Contoh: BBQ, Snack, Air Mineral" oninput="updateShoppingTitle(${shoppingCount}, this.value)">
+<input type="text" id="shoppingName${shoppingCount}" placeholder="Contoh: BBQ, Snack, Air Mineral" oninput="updateShoppingTitle(${shoppingCount}, this.value)">
 
 <label>Jenis</label>
-<select>
+<select id="shoppingType${shoppingCount}">
 <option>Belanja Masakan</option>
 <option>Snack</option>
 <option>Minuman</option>
@@ -563,285 +567,338 @@ Hitung
 </div>
 </div>`;
 
-container.innerHTML += html;
+    container.insertAdjacentHTML('beforeend', html);
 }
 
-function updateShoppingTitle(id,value){
-const title=document.getElementById('shoppingTitle'+id);
-
-if(value.trim()===''){
-title.innerHTML='🛒 Belanja Baru';
-}
-else{
-title.innerHTML='🛒 '+value;
-}
+function updateShoppingTitle(id, value) {
+    const title = document.getElementById('shoppingTitle' + id);
+    if (value.trim() === '') {
+        title.innerHTML = '🛒 Belanja Baru';
+    } else {
+        title.innerHTML = '🛒 ' + value;
+    }
 }
 
-function updateExpenseTitle(id,value){
-const title=document.getElementById('expenseTitle'+id);
-
-if(value.trim()===''){
-title.innerHTML='🍴 Tempat Baru';
-}
-else{
-title.innerHTML='🍴 '+value;
-}
+function updateExpenseTitle(id, value) {
+    const title = document.getElementById('expenseTitle' + id);
+    if (value.trim() === '') {
+        title.innerHTML = '🍴 Tempat Baru';
+    } else {
+        title.innerHTML = '🍴 ' + value;
+    }
 }
 
-function toggleExpense(id){
-const content=document.getElementById(id);
-content.classList.toggle('active');
+function toggleExpense(id) {
+    const content = document.getElementById(id);
+    if(content) content.classList.toggle('active');
 }
 
-function calculateBudget(targetId,actualId,resultId){
-const target=parseInt(document.getElementById(targetId).value)||0;
-const actual=parseInt(document.getElementById(actualId).value)||0;
-const diff=actual-target;
+function calculateBudget(targetId, actualId, resultId) {
+    const target = parseInt(document.getElementById(targetId).value) || 0;
+    const actual = parseInt(document.getElementById(actualId).value) || 0;
+    const diff = actual - target;
 
-const result=document.getElementById(resultId);
+    const result = document.getElementById(resultId);
 
-if(actual===0){
-result.innerHTML='⚠️ Isi pengeluaran aktual terlebih dahulu';
-result.style.color='#ff9800';
-}
-else if(diff>0){
-result.innerHTML='💸 Over Budget Rp'+diff.toLocaleString('id-ID');
-result.style.color='#e63946';
-}
-else if(diff<0){
-result.innerHTML='✅ Hemat Rp'+Math.abs(diff).toLocaleString('id-ID');
-result.style.color='#2a9d8f';
-}
-else{
-result.innerHTML='✅ Budget Pas';
-result.style.color='#2a9d8f';
-}
+    if (actual === 0) {
+        result.innerHTML = '⚠️ Isi pengeluaran aktual terlebih dahulu';
+        result.style.color = '#ff9800';
+    } else if (diff > 0) {
+        result.innerHTML = '💸 Over Budget Rp' + diff.toLocaleString('id-ID');
+        result.style.color = '#e63946';
+    } else if (diff < 0) {
+        result.innerHTML = '✅ Hemat Rp' + Math.abs(diff).toLocaleString('id-ID');
+        result.style.color = '#2a9d8f';
+    } else {
+        result.innerHTML = '✅ Budget Pas';
+        result.style.color = '#2a9d8f';
+    }
 }
 
-function resetAllData(){
+// ===============================
+// SISTEM PEMBUATAN RINGKASAN BARU
+// ===============================
+function generateSummary() {
+    const penginapan = parseInt(document.getElementById('penginapanActual').value) || 0;
+    const bensin = parseInt(document.getElementById('bensinActual').value) || 0;
+    
+    // Tarik Rincian Destinasi
+    let destinasiTotal = 0;
+    let listDestinasi = [];
+    for(let i=1; i<=destinasiCount; i++){
+        const nameEl = document.getElementById(`destinasiName${i}`);
+        const durasiEl = document.getElementById(`destinasiDurasi${i}`);
+        const actualEl = document.getElementById(`destinasiActual${i}`);
+        
+        if(nameEl){
+            const name = nameEl.value || 'Destinasi Belum Dinamai';
+            const durasi = durasiEl.value || '-';
+            const actual = parseInt(actualEl.value) || 0;
+            destinasiTotal += actual;
+            listDestinasi.push(`
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span>📍 <b>${name}</b> <span style="font-size:11px;color:#666;">(⏳ ${durasi})</span></span>
+                    <span style="color:#2a9d8f; font-weight:bold;">Rp ${actual.toLocaleString('id-ID')}</span>
+                </div>
+            `);
+        }
+    }
 
-const confirmReset = confirm(
-'Yakin ingin menghapus semua data trip?'
-);
+    // Tarik Rincian Makan
+    let dynamicTotal = 0;
+    let listMakan = [];
+    for(let i=1; i<=expenseCount; i++){
+        const nameEl = document.getElementById(`expenseName${i}`);
+        const actualEl = document.getElementById(`dynamicActual${i}`);
+        
+        if(nameEl){
+            const name = nameEl.value || 'Tempat Belum Dinamai';
+            const actual = parseInt(actualEl.value) || 0;
+            dynamicTotal += actual;
+            listMakan.push(`
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span>🍴 <b>${name}</b></span>
+                    <span style="color:#2a9d8f; font-weight:bold;">Rp ${actual.toLocaleString('id-ID')}</span>
+                </div>
+            `);
+        }
+    }
 
-if(confirmReset){
+    // Tarik Rincian Belanja
+    let shoppingTotal = 0;
+    let listBelanja = [];
+    for(let i=1; i<=shoppingCount; i++){
+        const nameEl = document.getElementById(`shoppingName${i}`);
+        const actualEl = document.getElementById(`shoppingActual${i}`);
+        
+        if(nameEl){
+            const name = nameEl.value || 'Belanja Belum Dinamai';
+            const actual = parseInt(actualEl.value) || 0;
+            shoppingTotal += actual;
+            listBelanja.push(`
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span>🛒 <b>${name}</b></span>
+                    <span style="color:#2a9d8f; font-weight:bold;">Rp ${actual.toLocaleString('id-ID')}</span>
+                </div>
+            `);
+        }
+    }
 
-// hapus localStorage
-localStorage.clear();
+    const total = penginapan + bensin + shoppingTotal + destinasiTotal + dynamicTotal;
+    const summary = document.getElementById('summaryBox');
+    const tasks = document.querySelectorAll('.task');
+    const checked = document.querySelectorAll('.task:checked').length;
+    const totalTask = tasks.length;
+    const progressPercent = totalTask === 0 ? 0 : Math.round((checked / totalTask) * 100);
 
-// reset semua input
-const allInputs = document.querySelectorAll('input, select');
+    // Desain diperkecil (font dan padding) agar muat rasionya
+    summary.innerHTML = `
+<div style="font-size:18px;margin-bottom:12px;color:#ff7b54;text-align:center;font-weight:bold;">
+🌴 RINGKASAN TRIP 🌊
+</div>
 
-allInputs.forEach(item=>{
+<div style="padding:10px;background:white;border-radius:10px;margin-bottom:10px;border-left: 4px solid #2a9d8f;">
+<b>📌 Progress Trip</b><br>
+${progressPercent}% checklist selesai (${checked}/${totalTask})
+</div>
 
-if(item.type==='checkbox'){
-item.checked=false;
+<div style="padding:10px;background:white;border-radius:10px;margin-bottom:10px;border-left: 4px solid #0077b6;">
+<div style="margin-bottom:8px;font-size:14px;"><b>🗺️ Destinasi Tujuan</b></div>
+${listDestinasi.length > 0 ? listDestinasi.join('') : '<i style="color:#888;">Belum ada destinasi</i>'}
+</div>
+
+<div style="padding:10px;background:white;border-radius:10px;margin-bottom:10px;border-left: 4px solid #ffb703;">
+<div style="margin-bottom:8px;font-size:14px;"><b>☕ Tempat Ngopi & Makan</b></div>
+${listMakan.length > 0 ? listMakan.join('') : '<i style="color:#888;">Belum ada tempat dipilih</i>'}
+</div>
+
+<div style="padding:10px;background:white;border-radius:10px;margin-bottom:10px;border-left: 4px solid #e63946;">
+<div style="margin-bottom:8px;font-size:14px;"><b>🛒 Belanja & Jajanan</b></div>
+${listBelanja.length > 0 ? listBelanja.join('') : '<i style="color:#888;">Belum ada belanja ditambahkan</i>'}
+</div>
+
+<div style="padding:10px;background:white;border-radius:10px;margin-bottom:10px;border-left: 4px solid #6a4c93;">
+<div style="margin-bottom:8px;font-size:14px;"><b>💰 Penginapan & Transport</b></div>
+<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+    <span>🏠 Penginapan</span>
+    <span style="color:#2a9d8f;font-weight:bold;">Rp ${penginapan.toLocaleString('id-ID')}</span>
+</div>
+<div style="display:flex; justify-content:space-between;">
+    <span>⛽ Transportasi</span>
+    <span style="color:#2a9d8f;font-weight:bold;">Rp ${bensin.toLocaleString('id-ID')}</span>
+</div>
+</div>
+
+<div style="padding:12px;background:linear-gradient(to right,#ffecd2,#fcb69f);border-radius:12px;font-size:16px;text-align:center;font-weight:bold;color:#333;margin-top:10px;">
+💸 TOTAL TRIP : Rp ${total.toLocaleString('id-ID')}
+</div>
+`;
 }
-else{
-item.value='';
+
+function resetAllData() {
+    const confirmReset = confirm('Yakin ingin menghapus semua data trip?');
+    if (confirmReset) {
+        localStorage.removeItem('tripData');
+        alert('✅ Semua data berhasil direset');
+        location.reload(); 
+    }
 }
+
+function saveData() {
+    const data = {
+        destinasiCount: destinasiCount,
+        expenseCount: expenseCount,
+        shoppingCount: shoppingCount,
+        inputs: {},
+        customTasks: [] 
+    };
+
+    const allInputs = document.querySelectorAll('input, select');
+    allInputs.forEach(item => {
+        if (item.id && item.id !== 'newTaskInput' && !item.classList.contains('task')) { 
+            data.inputs[item.id] = item.value;
+        }
+    });
+
+    document.querySelectorAll('#checklistContainer .check-item').forEach(item => {
+        const checkbox = item.querySelector('.task');
+        const label = item.querySelector('label');
+        if(checkbox && label) {
+            data.customTasks.push({
+                text: label.innerText,
+                checked: checkbox.checked
+            });
+        }
+    });
+
+    localStorage.setItem('tripData', JSON.stringify(data));
+}
+
+function loadData() {
+    const saved = localStorage.getItem('tripData');
+    
+    if (saved) {
+        const data = JSON.parse(saved);
+
+        if (data.customTasks && data.customTasks.length > 0) {
+            data.customTasks.forEach(task => addTask(task.text, task.checked, false));
+        }
+
+        const savedDestinasiCount = data.destinasiCount || 0;
+        for (let i = 0; i < savedDestinasiCount; i++) {
+            addDestinasi();
+        }
+
+        const savedExpenseCount = data.expenseCount || 0;
+        for (let i = 0; i < savedExpenseCount; i++) {
+            addExpense();
+        }
+
+        const savedShoppingCount = data.shoppingCount || 0;
+        for (let i = 0; i < savedShoppingCount; i++) {
+            addShoppingItem();
+        }
+
+        const allInputs = document.querySelectorAll('input, select');
+        allInputs.forEach(item => {
+            if (item.id && data.inputs[item.id] !== undefined) {
+                item.value = data.inputs[item.id];
+            }
+        });
+
+        for (let i = 1; i <= savedDestinasiCount; i++) {
+            const inputEl = document.getElementById('destinasiName' + i);
+            if(inputEl) updateDestinasiTitle(i, inputEl.value);
+        }
+        for (let i = 1; i <= savedExpenseCount; i++) {
+            const inputEl = document.getElementById('expenseName' + i);
+            if(inputEl) updateExpenseTitle(i, inputEl.value);
+        }
+        for (let i = 1; i <= savedShoppingCount; i++) {
+            const inputEl = document.getElementById('shoppingName' + i);
+            if(inputEl) updateShoppingTitle(i, inputEl.value);
+        }
+    } else {
+        const defaultTasks = ["Berangkat", "Sampai Tujuan", "Makan Malam", "Check In Penginapan"];
+        defaultTasks.forEach(text => addTask(text, false, false));
+    }
+
+    updateProgress();
+}
+
+document.addEventListener('input', (e) => {
+    if(!e.target.classList.contains('task')) {
+        saveData();
+    }
 });
 
-// reset progress
-updateProgress();
+window.onload = loadData;
 
-// reset detail pantai
-document.getElementById('pantaiDetail').innerHTML='';
-
-// reset ringkasan
-document.getElementById('summaryBox').innerHTML=
-'✨ Ringkasan trip akan muncul di sini setelah tombol ditekan.';
-
-// reset progress text
-document.getElementById('progress').style.width='0%';
-document.getElementById('progressText').innerText='0% selesai';
-
-// hapus dynamic content
-document.getElementById('dynamicExpense').innerHTML='';
-document.getElementById('shoppingContainer').innerHTML='';
-
-// reset counter
-expenseCount=0;
-shoppingCount=0;
-
-alert('✅ Semua data berhasil direset');
-}
-}
-
-// ===============================
-// AUTO SAVE SEMUA INPUT
-// ===============================
-
-function saveData(){
-const allInputs=document.querySelectorAll('input, select');
-
-allInputs.forEach((item,index)=>{
-localStorage.setItem('trip_'+index,item.value);
-
-if(item.type==='checkbox'){
-localStorage.setItem('trip_check_'+index,item.checked);
-}
-});
-}
-
-// ===============================
-// LOAD DATA SAAT WEB DIBUKA
-// ===============================
-
-function loadData(){
-const allInputs=document.querySelectorAll('input, select');
-
-allInputs.forEach((item,index)=>{
-
-if(item.type==='checkbox'){
-const checked=localStorage.getItem('trip_check_'+index)==='true';
-item.checked=checked;
-}
-else{
-const saved=localStorage.getItem('trip_'+index);
-
-if(saved!==null){
-item.value=saved;
-}
-}
+document.getElementById('newTaskInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        addTask();
+    }
 });
 
-updateProgress();
+async function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const element = document.getElementById('mainContainer'); 
+    const canvas = await html2canvas(element, { scale: 3 }); // Kualitas PDF juga ditingkatkan
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save('Trip_Bersama_Ayu.pdf');
 }
 
 // ===============================
-// AUTO SAVE SAAT INPUT BERUBAH
+// SIMPAN GAMBAR - FIX UKURAN PAS & KUALITAS HD
 // ===============================
+async function downloadImage() {
+    generateSummary(); 
+    
+    const element = document.getElementById('summaryCard');
+    const btn = document.getElementById('btnSummary');
+    const summaryBox = document.getElementById('summaryBox');
 
-document.addEventListener('input',saveData);
-document.addEventListener('change',saveData);
+    // Sembunyikan tombol sebelum difoto
+    btn.style.display = 'none';
 
-// LOAD DATA
-window.onload=loadData;
-// ===============================
-// AUTO SAVE SEMUA INPUT
-// ===============================
+    // Buka gulungan (scroll) agar panjang full
+    summaryBox.style.maxHeight = 'none';
+    summaryBox.style.overflowY = 'visible';
 
-function saveData(){
+    // TRIK JITU: Matikan sifat "melar"
+    element.style.alignSelf = 'start';
 
-const allInputs=document.querySelectorAll('input, select');
+    // Kasih jeda sedikit biar halamannya selesai menyesuaikan ukuran
+    setTimeout(async () => {
+        // SETTING RESOLUSI HD ADA DI SINI (scale: 4)
+        const canvas = await html2canvas(element, { 
+            scale: 4, // <-- Semakin besar semakin jernih (4 adalah resolusi HD/4K)
+            backgroundColor: '#ffffff',
+            useCORS: true // Membantu render lebih tajam
+        });
 
-allInputs.forEach((item,index)=>{
+        const image = canvas.toDataURL('image/png');
 
-if(item.type==='checkbox'){
-localStorage.setItem('trip_check_'+index,item.checked);
-}
-else{
-localStorage.setItem('trip_'+index,item.value);
-}
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = 'Ringkasan_Trip_Ayu_HD.png';
+        link.click();
 
-});
-
-}
-
-// ===============================
-// LOAD DATA SAAT WEB DIBUKA
-// ===============================
-
-function loadData(){
-
-const allInputs=document.querySelectorAll('input, select');
-
-allInputs.forEach((item,index)=>{
-
-if(item.type==='checkbox'){
-
-const checked=
-localStorage.getItem('trip_check_'+index)==='true';
-
-item.checked=checked;
-
-}
-else{
-
-const saved=localStorage.getItem('trip_'+index);
-
-if(saved!==null){
-item.value=saved;
-}
-
-}
-
-});
-
-updateProgress();
-
-}
-
-// ===============================
-// AUTO SAVE SAAT INPUT BERUBAH
-// ===============================
-
-document.addEventListener('input',saveData);
-
-document.addEventListener('change',saveData);
-
-// LOAD DATA
-window.onload=loadData;
-
-// ===============================
-// DOWNLOAD PDF
-// ===============================
-
-async function downloadPDF(){
-
-const { jsPDF } = window.jspdf;
-
-const element = document.querySelector('.container');
-
-const canvas = await html2canvas(element,{
-scale:2
-});
-
-const imgData = canvas.toDataURL('image/png');
-
-const pdf = new jsPDF('p','mm','a4');
-
-const pdfWidth = pdf.internal.pageSize.getWidth();
-
-const pdfHeight =
-(canvas.height * pdfWidth) / canvas.width;
-
-pdf.addImage(imgData,'PNG',0,0,pdfWidth,pdfHeight);
-
-pdf.save('Trip_Bersama_Ayu.pdf');
-
-}
-
-// ===============================
-// SIMPAN KE GALERI / GAMBAR
-// ===============================
-
-async function downloadImage(){
-
-const element = document.querySelector('.container');
-
-const canvas = await html2canvas(element,{
-scale:2
-});
-
-const image = canvas.toDataURL('image/png');
-
-const link = document.createElement('a');
-
-link.href = image;
-
-link.download = 'Trip_Bersama_Ayu.png';
-
-link.click();
-
+        // Kembalikan ke tampilan semula 
+        btn.style.display = 'block';
+        summaryBox.style.maxHeight = '350px';
+        summaryBox.style.overflowY = 'auto';
+        element.style.alignSelf = 'auto'; 
+    }, 300); 
 }
 
 </script>
 
-<!-- Library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </body>
